@@ -1,0 +1,47 @@
+export type Ingredient = {
+    name: string;
+    amount: number;
+    unit: 'g' | 'ml'; 
+}
+
+export type Recipe = {
+    id: string;
+    name: string;
+    baseYieldPieces: number;
+    weightPerPiece: number; // in grams
+    ingredients: Ingredient[];
+    steps: string[];
+    notes?: string[];
+  };
+
+  export const recipes: Recipe[] = [
+    {
+      id: "pandesal",
+      name: "Pandesal",
+      baseYieldPieces: 10,
+      weightPerPiece: 43,
+      ingredients: [
+        { name: "Bread flour", amount: 230, unit: "g" },
+        { name: "Skimmed Milk", amount: 13, unit: "g" },
+        { name: "Water-38 to 40 deg Celsius", amount: 120, unit: "ml" },
+        { name: "Sugar", amount: 30, unit: "g" },
+        { name: "Salt", amount: 40, unit: "g" },
+        { name: "Instant yeast", amount: 5, unit: "g" },
+        { name: "Butter (soft)", amount: 25, unit: "g" },
+        { name: "Breadcrumbs", amount: 10, unit: "g" },
+      ],
+      steps: [
+        "Prepare and bloom yeast if necessary.",
+        "Mix flour, sugar, salt, skimmed milk, water and yeast.",
+        "Knead until a dough forms.",
+        "Knead in butter until smooth and elastic. (dough does not stick to the sides of the bowl)",
+        "Let rise until doubled (about 60–90 min).",
+        "Divide into pieces, shape, coat with breadcrumbs (optional).",
+        "Proof 30–45 min, bake at 180°C for 12–15 min.",
+      ],
+      notes: [
+        "This is a starter recipe for the app. Replace with your own exact pandesal recipe anytime.",
+        "Scaling works best when all ingredients are in grams/ml.",
+      ],
+    },
+  ];
