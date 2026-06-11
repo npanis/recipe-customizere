@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { recipes } from "../../../data/recipes";
+import { getRecipeById } from "../../../lib/db";
 import { scaleRecipe } from "../../../lib/scale";
 
 export async function POST(req: Request) {
@@ -15,14 +15,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "targetPieces must be a positive number" }, { status: 400 });
     }
 
-    const recipe = recipes.find((r) => r.id === recipeId);
+    const recipe = getRecipeById(recipeId);
     if (!recipe) {
-      return NextResponse.json({ error: "recipe not found" }, { status: 404 });
+      return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
     }
 
     const scaled = scaleRecipe(recipe, targetPieces);
     return NextResponse.json(scaled);
   } catch {
-    return NextResponse.json({ error: "invalid JSON body" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 }
