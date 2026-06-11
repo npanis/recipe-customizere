@@ -1,36 +1,148 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Recipe Micro-Scaler
 
-## Getting Started
+## About
 
-First, run the development server:
+Recipe Micro-Scaler is a Next.js web app for bakers and home cooks who want to make a smaller (or larger) batch of a recipe. You pick a recipe, enter how many pieces you want, and the app scales every ingredient automatically — applying smart rounding per ingredient type (e.g. yeast rounds to 0.1g, salt and sugar round to 0.5g, liquids to 1ml).
+
+Recipes are stored in a local `recipes.json` file so they persist across restarts with no database setup required.
+
+**Key features:**
+- Scale any recipe up or down by piece count
+- Add new recipes via the UI form (name, yield, ingredients, steps, notes)
+- Edit existing recipes in place
+- Per-ingredient rounding rules for practical measurements
+- REST API for recipes and scaling (`/api/recipes`, `/api/recipes/[id]`, `/api/scale`)
+
+**Tech stack:** Next.js 16 · React 19 · TypeScript · Tailwind CSS · Jest
+
+---
+
+## Contributing Locally
+
+### Prerequisites
+
+- Node.js 22+
+- npm 10+
+- Git
+
+### Setup
+
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:npanis/recipe-customizere.git
+   cd recipe-customizere
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Project structure
+
+```
+src/
+  app/
+    api/
+      recipes/          # GET (list), POST (create)
+        [id]/           # GET, PUT, DELETE by id
+      scale/            # POST — scale a recipe by piece count
+    page.tsx            # Main UI
+  data/
+    recipes.ts          # Seed data (loaded on first run)
+  lib/
+    db.ts               # JSON file persistence layer
+    scale.ts            # Scaling and rounding logic
+  __tests__/
+    scale.test.ts       # Unit tests — scaling logic
+    db.test.ts          # Unit tests — persistence layer
+    integration/
+      recipes-api.test.ts   # Integration tests — recipes API
+      scale-api.test.ts     # Integration tests — scale API
+```
+
+### Adding a recipe
+
+You can add recipes directly through the UI (click **+ New Recipe**), or by editing `recipes.json` at the project root while the server is stopped.
+
+---
+
+## Running Unit Tests
+
+Unit tests cover the core scaling logic (`scale.ts`) and the persistence layer (`db.ts`). They run in isolation using a temporary file — your `recipes.json` is never touched.
+
+```bash
+npm test
+```
+
+Expected output:
+```
+PASS src/__tests__/scale.test.ts
+PASS src/__tests__/db.test.ts
+
+Test Suites: 2 passed
+Tests:       23 passed
+```
+
+---
+
+## Running Integration Tests
+
+Integration tests call the actual Next.js route handlers end-to-end with real `Request` objects and real file I/O. They cover every API route, validation error case, and scaling scenario.
+
+```bash
+npm run test:integration
+```
+
+Expected output:
+```
+PASS src/__tests__/integration/recipes-api.test.ts
+PASS src/__tests__/integration/scale-api.test.ts
+
+Test Suites: 2 passed
+Tests:       30 passed
+```
+
+To run unit and integration tests together (e.g. before merging):
+
+```bash
+npm run test:all
+```
+
+> **CI/CD note:** All tests are self-contained and use isolated temp files. No running server, no external services, and no shared state between suites. Safe to run in any QA environment.
+
+---
+
+## Running Locally
+
+### Development mode
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Starts the Next.js dev server at [http://localhost:3000](http://localhost:3000) with hot reload.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+On the first request, `recipes.json` is created at the project root and seeded with the starter Pandesal recipe.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Production mode
 
-## Learn More
+```bash
+npm run build
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+Builds an optimised production bundle and starts the server.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Linting
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+```

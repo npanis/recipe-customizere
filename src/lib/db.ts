@@ -21,23 +21,26 @@ export type DbRecipe = {
 
 // ─── File I/O ─────────────────────────────────────────────────────────────────
 
-const DATA_FILE = path.join(process.cwd(), 'recipes.json');
+let dataFile = path.join(process.cwd(), 'recipes.json');
+
+/** Override the data file path — for tests only. */
+export function _setDataFile(p: string) { dataFile = p; }
 
 function readAll(): DbRecipe[] {
-  if (!fs.existsSync(DATA_FILE)) {
+  if (!fs.existsSync(dataFile)) {
     // First run — seed from the static recipes.ts data
     const seed: DbRecipe[] = seedRecipes.map((r) => ({
       ...r,
       notes: r.notes ?? [],
     }));
-    fs.writeFileSync(DATA_FILE, JSON.stringify(seed, null, 2), 'utf-8');
+    fs.writeFileSync(dataFile, JSON.stringify(seed, null, 2), 'utf-8');
     return seed;
   }
-  return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8')) as DbRecipe[];
+  return JSON.parse(fs.readFileSync(dataFile, 'utf-8')) as DbRecipe[];
 }
 
 function writeAll(recipes: DbRecipe[]) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(recipes, null, 2), 'utf-8');
+  fs.writeFileSync(dataFile, JSON.stringify(recipes, null, 2), 'utf-8');
 }
 
 // ─── Public helpers ───────────────────────────────────────────────────────────

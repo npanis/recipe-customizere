@@ -1,6 +1,6 @@
 import { Ingredient, Recipe } from "../data/recipes";
 
-function roundAmount(name: string, unit: Ingredient["unit"], value: number) {
+export function roundAmount(name: string, unit: Ingredient["unit"], value: number) {
   const n = name.toLowerCase();
 
   // Yeast is usually tiny → keep 0.1g precision
