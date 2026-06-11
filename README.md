@@ -68,6 +68,53 @@ src/
       scale-api.test.ts     # Integration tests — scale API
 ```
 
+### Pre-commit hooks (Husky)
+
+This project uses [Husky](https://typicode.github.io/husky) to automatically run unit and integration tests before every `git commit`. If any test fails, the commit is blocked.
+
+**First-time setup (required for every contributor):**
+
+1. Install dependencies (this also runs `husky` via the `prepare` script):
+   ```bash
+   npm install
+   ```
+
+2. Verify the hook is in place:
+   ```bash
+   cat .husky/pre-commit
+   ```
+   You should see the test commands printed out.
+
+3. Make the hook executable if needed (macOS/Linux only):
+   ```bash
+   chmod +x .husky/pre-commit
+   ```
+
+**What happens when you commit:**
+
+```bash
+git commit -m "my change"
+
+# Running unit tests...
+#   → passes ✅  or  ❌ Unit tests failed. Commit blocked.
+
+# Running integration tests...
+#   → passes ✅  or  ❌ Integration tests failed. Commit blocked.
+
+# All tests passed. Proceeding with commit.
+```
+
+**Skipping the hook (use sparingly):**
+
+If you need to commit work-in-progress without running tests:
+```bash
+git commit -m "wip" --no-verify
+```
+
+> This should only be used for draft commits. All tests must pass before merging to `main`.
+
+---
+
 ### Adding a recipe
 
 You can add recipes directly through the UI (click **+ New Recipe**), or by editing `recipes.json` at the project root while the server is stopped.
